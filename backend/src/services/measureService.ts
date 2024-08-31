@@ -1,5 +1,5 @@
-import { Measure } from '../entities/Measure';  // Certifique-se de importar a entidade correta
-import { AppDataSource } from '../ormconfig';   // Acesso à conexão do banco de dados
+import { Measure } from '../entities/Measure';
+import { AppDataSource } from '../ormconfig';
 import { Between, Repository } from 'typeorm';
 
 // Interface para padronizar o serviço
@@ -15,10 +15,10 @@ export class MeasureService implements IMeasureService {
   private measureRepository: Repository<Measure>;
 
   constructor() {
-    this.measureRepository = AppDataSource.getRepository(Measure);  // Obtém o repositório da entidade Measure
+    this.measureRepository = AppDataSource.getRepository(Measure);  // Obtem o repositório da entidade Measure
   }
 
-  // Verifica se já existe uma medida para o cliente no mês atual
+  // Verifica se já existe uma medida para o cliente no mes atual
   async findExistingMeasure(customer_code: string, measure_type: string, measure_datetime: Date): Promise<Measure | null> {
     const monthStart = new Date(measure_datetime.getFullYear(), measure_datetime.getMonth(), 1);
     const monthEnd = new Date(measure_datetime.getFullYear(), measure_datetime.getMonth() + 1, 0);
