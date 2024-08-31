@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { AppDataSource } from '../ormconfig'; // Atualize o caminho conforme sua estrutura
-import { Measure } from '../entities/Measure'; // Atualize o caminho conforme sua estrutura
+import { AppDataSource } from '../ormconfig';
+import { Measure } from '../entities/Measure';
 
 export const listMeasuresController = async (req: Request, res: Response) => {
   const { customer_code } = req.params;

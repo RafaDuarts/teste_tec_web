@@ -14,7 +14,6 @@ AppDataSource.initialize()
   .then(() => {
     console.log("Data Source has been initialized!");
 
-    // Definindo rotas com prefixos adequados
     app.use('/upload', uploadRoutes);   // Rotas de upload
     app.use('/confirm', confirmRoutes); // Rotas de confirmação
     app.use('/list', listRoutes);       // Rotas de listagem
