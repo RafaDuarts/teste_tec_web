@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
+import { AppDataSource } from '../ormconfig'; // Atualize o caminho conforme sua estrutura
+import { Measure } from '../entities/Measure'; // Atualize o caminho conforme sua estrutura
 
 export const listMeasuresController = async (req: Request, res: Response) => {
   const { customer_code } = req.params;
   const { measure_type } = req.query;
+
+  const measureRepository = AppDataSource.getRepository(Measure);
 
   try {
     // Validação de tipo de medição
@@ -14,31 +18,17 @@ export const listMeasuresController = async (req: Request, res: Response) => {
       });
     }
 
-    // TODO: Buscar as medições no banco de dados
-    // Aqui você vai buscar as medições para o cliente específico e, se o measure_type for informado, filtrar apenas o tipo especificado.
-    const measures = [
-      {
-        measure_uuid: "guid-gerado",
-        measure_datetime: "2024-08-27T10:00:00Z",
-        measure_type: "WATER",
-        has_confirmed: true,
-        image_url: "https://link_temporario_da_imagem.com"
-      },
-      {
-        measure_uuid: "guid-outro",
-        measure_datetime: "2024-07-27T10:00:00Z",
-        measure_type: "GAS",
-        has_confirmed: false,
-        image_url: "https://link_temporario_da_imagem_gas.com"
-      }
-    ];
+    // Buscar as medições no banco de dados
+    const queryBuilder = measureRepository.createQueryBuilder('measure')
+      .where('measure.customer_code = :customer_code', { customer_code });
 
-    // Se o measure_type foi especificado, filtrar os resultados
-    const filteredMeasures = measure_type
-      ? measures.filter(measure => measure.measure_type.toUpperCase() === (measure_type as string).toUpperCase())
-      : measures;
+    if (measure_type) {
+      queryBuilder.andWhere('measure.measure_type = :measure_type', { measure_type: (measure_type as string).toUpperCase() });
+    }
 
-    if (filteredMeasures.length === 0) {
+    const measures = await queryBuilder.getMany();
+
+    if (measures.length === 0) {
       return res.status(404).json({
         error_code: "MEASURES_NOT_FOUND",
         error_description: "Nenhuma leitura encontrada"
@@ -48,7 +38,7 @@ export const listMeasuresController = async (req: Request, res: Response) => {
     // Sucesso
     return res.status(200).json({
       customer_code,
-      measures: filteredMeasures
+      measures
     });
   } catch (error) {
     console.error(error);

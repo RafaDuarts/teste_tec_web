@@ -9,5 +9,5 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [Measure],
-  synchronize: true, // Em produção, é recomendável desativar isso
+  synchronize: true,
 });

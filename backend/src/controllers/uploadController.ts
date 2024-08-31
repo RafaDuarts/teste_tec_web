@@ -38,17 +38,15 @@ export const uploadController = async (req: Request, res: Response) => {
     // Integração com a API do Gemini
     const response = await axios.post('https://generativelanguage.googleapis.com/v1beta/corpora', {
       image,
-      // Adicione outros parâmetros necessários para a API do Gemini
     }, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json' // Certifique-se de definir o Content-Type correto
+        'Content-Type': 'application/json'
       }
     });
 
     const { image_url, measure_value, measure_uuid } = response.data;
 
-    // Criar nova medida no banco
     const newMeasure = await measureService.createMeasure({
       customer_code,
       measure_datetime: new Date(measure_datetime),
